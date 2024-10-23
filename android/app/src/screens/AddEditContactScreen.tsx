@@ -1,4 +1,3 @@
-// src/screens/AddEditContactScreen.tsx
 import React, {useState, useEffect} from 'react';
 import {View, TextInput, Button} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -11,34 +10,26 @@ const AddEditContactScreen = ({route, navigation}: Props) => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
 
-  // Si estamos editando un contacto, obtenemos los datos del mismo
   useEffect(() => {
-    if (route.params?.contactId) {
-      // Aquí podrías cargar los datos reales del contacto por su ID
-      // Para este ejemplo, lo dejamos vacío
-      // Por ejemplo: cargarContacto(route.params.contactId);
-      const contactId = route.params.contactId;
-      // Simular carga de contacto para editar:
-      // Aquí podrías obtener el contacto desde un backend o AsyncStorage.
-      const contact = {
-        id: contactId,
-        name: 'Harold Medrano',
-        phone: '302-456-7890',
-        email: 'harold@example.com',
-      };
-      setName(contact.name);
-      setPhone(contact.phone);
-      setEmail(contact.email);
+    if (route.params?.contactId && route.params?.contact) {
+      const contact = route.params.contact;
+      if (contact) {
+        setName(contact.name || '');
+        setPhone(contact.phone || '');
+        setEmail(contact.email || '');
+      }
     }
-  }, [route.params?.contactId]);
+  }, [route.params?.contactId, route.params?.contact]);
 
   const handleSave = () => {
-    // Aquí agregarías la lógica para guardar el contacto (por ejemplo, en AsyncStorage o un backend)
-    // Por ahora, solo volvemos a la pantalla de listado
-    if (name && phone && email) {
-      console.log('Contact saved:', {name, phone, email});
-    }
-    navigation.goBack();
+    const contact = {
+      id: route.params?.contactId || Date.now().toString(),
+      name,
+      phone,
+      email,
+    };
+
+    navigation.navigate('ContactList', {newContact: contact});
   };
 
   return (

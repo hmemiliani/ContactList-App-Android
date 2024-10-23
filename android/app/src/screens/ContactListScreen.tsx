@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,20 +7,28 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigation';
 
 type ContactListScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'ContactList' | 'AddEditContact'
+  'ContactList'
 >;
+type ContactListScreenRouteProp = RouteProp<RootStackParamList, 'ContactList'>;
+
+interface Contact {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+}
 
 const ContactListScreen = () => {
-  const navigation = useNavigation<ContactListScreenNavigationProp>(); // Aquí agregamos el tipo
+  const navigation = useNavigation<ContactListScreenNavigationProp>();
+  const route = useRoute<ContactListScreenRouteProp>();
 
-  // Datos ficticios de ejemplo
-  const [contacts] = useState([
+  const [contacts, setContacts] = useState<Contact[]>([
     {
       id: '1',
       name: 'Harold Medrano',
@@ -35,13 +43,34 @@ const ContactListScreen = () => {
     },
   ]);
 
-  const renderItem = ({item}: {item: any}) => (
+  useEffect(() => {
+    if (route.params?.newContact) {
+      const newContact = route.params.newContact;
+
+      setContacts(prevContacts => {
+        const contactExists = prevContacts.some(
+          contact => contact.id === newContact.id,
+        );
+        if (contactExists) {
+          return prevContacts.map(contact =>
+            contact.id === newContact.id ? newContact : contact,
+          );
+        } else {
+          return [...prevContacts, newContact];
+        }
+      });
+    }
+  }, [route.params?.newContact]);
+
+  const renderItem = ({item}: {item: Contact}) => (
     <TouchableOpacity
       style={styles.contactItem}
       onPress={() =>
-        navigation.navigate('AddEditContact', {contactId: item.id})
-      } // Aquí pasamos el parámetro correctamente
-    >
+        navigation.navigate('AddEditContact', {
+          contactId: item.id,
+          contact: item,
+        })
+      }>
       <Text style={styles.contactName}>{item.name}</Text>
       <Text>{item.phone}</Text>
       <Text>{item.email}</Text>
@@ -58,7 +87,10 @@ const ContactListScreen = () => {
       <Button
         title="Add Contact"
         onPress={() =>
-          navigation.navigate('AddEditContact', {contactId: undefined})
+          navigation.navigate({
+            name: 'AddEditContact',
+            params: {contactId: undefined},
+          })
         }
       />
     </View>
