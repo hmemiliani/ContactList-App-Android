@@ -36,9 +36,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.baseapp"
+    namespace "com.ContactApp"
     defaultConfig {
-        applicationId "com.baseapp"
+        applicationId "com.ContactApp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

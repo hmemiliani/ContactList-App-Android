@@ -7,7 +7,8 @@ export interface Contact {
 }
 
 export type RootStackParamList = {
-  ContactList: { newContact?: Contact };  // El parámetro newContact es del tipo Contact
+  ContactList: { newContact?: Contact, contactIdToDelete?: string };
   AddEditContact: { contactId?: string; contact?: Contact };
+  ContactDetail: { contact: Contact};
 };
 

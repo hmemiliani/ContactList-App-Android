@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ContactListScreen from './android/app/src/screens/ContactListScreen';
 import AddEditContactScreen from './android/app/src/screens/AddEditContactScreen';
 import {RootStackParamList} from './android/app/src/types/navigation';
+import ContactDetailScreen from './android/app/src/screens/ContactDetailScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,6 +22,8 @@ const App = () => {
           component={AddEditContactScreen}
           options={{title: 'Add / Edit Contact'}}
         />
+        <Stack.Screen name="ContactDetail" component={ContactDetailScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

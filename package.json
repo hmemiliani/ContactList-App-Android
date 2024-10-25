@@ -1,5 +1,5 @@
 {
-  "name": "BaseApp",
+  "name": "ContactApp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
-    "BaseApp": "file:",
+    "ContactApp": "file:",
     "formik": "^2.4.6",
     "react": "18.2.0",
     "react-native": "0.74.5",
