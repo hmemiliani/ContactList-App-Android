@@ -22,7 +22,7 @@ interface Contact {
   name: string;
   phone: string;
   email?: string;
-  profileImage?: string;  // Añadir el campo para la imagen de perfil
+  profileImage?: string;
 }
 
 const STORAGE_KEY = '@contacts';
@@ -98,26 +98,33 @@ const ContactListScreen = () => {
 
   const renderItem = ({ item }: { item: Contact }) => (
     <View style={styles.contactItem}>
-      <TouchableOpacity
-        style={{ flex: 1 }}
-        onPress={() => navigation.navigate('AddEditContact', { contactId: item.id, contact: item })}
-      >
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => navigation.navigate('AddEditContact', { contactId: item.id, contact: item })}
+        >
+      <View style={styles.infoContactContainer}>
         {item.profileImage ? (
-          <Image source={{ uri: item.profileImage }} style={styles.profileImage} />
-        ) : (
-          <View style={styles.placeholder}>
-            <Text>{item.name ? item.name[0] : "?"}</Text>
-          </View>
-        )}
-        <View style={{ marginLeft: 10 }}>
-          <Text style={styles.contactName}>{item.name}</Text>
-          <Text>{item.phone}</Text>
-          <Text>{item.email}</Text>
-        </View>
+            <Image source={{ uri: item.profileImage }} style={styles.profileImage} />
+          ) : (
+            <View style={styles.placeholder}>
+              <Text>{item.name ? item.name[0] : "?"}</Text>
+            </View>
+          )
+        }
+      
+      <View style={styles.contactContainer}>
+        <Text style={styles.contactName}>{item.name}</Text>
+        <Text>{item.phone}</Text>
+        <Text>{item.email}</Text>
+      </View>
+      </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => deleteContact(item.id)}>
-        <Icon name="trash" size={24} color="red" />
-      </TouchableOpacity>
+      <View style={styles.actionsContainer}>
+        <TouchableOpacity onPress={() => deleteContact(item.id)}>
+          <Icon name="trash" size={24} color="red" />
+        </TouchableOpacity>
+      </View>
+        
     </View>
   );
 
@@ -145,10 +152,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  infoContactContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  contactContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginLeft: 20,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   contactItem: {
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
