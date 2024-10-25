@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  Image,
-} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Importar la imagen por defecto
+const defaultImage = require('../assets/images/default-profile.png');
 
 type ContactListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ContactList'>;
 type ContactListScreenRouteProp = RouteProp<RootStackParamList, 'ContactList'>;
@@ -22,7 +17,7 @@ interface Contact {
   name: string;
   phone: string;
   email?: string;
-  profileImage?: string;  // Añadir el campo para la imagen de perfil
+  profileImage?: string;
 }
 
 const STORAGE_KEY = '@contacts';
@@ -98,23 +93,19 @@ const ContactListScreen = () => {
 
   const renderItem = ({ item }: { item: Contact }) => (
     <View style={styles.contactItem}>
-      <TouchableOpacity
-        style={{ flex: 1 }}
-        onPress={() => navigation.navigate('AddEditContact', { contactId: item.id, contact: item })}
-      >
-        {item.profileImage ? (
-          <Image source={{ uri: item.profileImage }} style={styles.profileImage} />
-        ) : (
-          <View style={styles.placeholder}>
-            <Text>{item.name ? item.name[0] : "?"}</Text>
-          </View>
-        )}
-        <View style={{ marginLeft: 10 }}>
-          <Text style={styles.contactName}>{item.name}</Text>
-          <Text>{item.phone}</Text>
-          <Text>{item.email}</Text>
-        </View>
-      </TouchableOpacity>
+      {/* Usar la imagen de perfil si existe, o la imagen predeterminada si no */}
+      <Image
+        source={item.profileImage ? { uri: item.profileImage } : defaultImage}
+        style={styles.profileImage}
+      />
+
+      <View style={styles.contactDetails}>
+        <Text style={styles.contactName}>{item.name}</Text>
+        <Text>{item.phone}</Text>
+        <Text>{item.email}</Text>
+      </View>
+
+      {/* Botón para eliminar */}
       <TouchableOpacity onPress={() => deleteContact(item.id)}>
         <Icon name="trash" size={24} color="red" />
       </TouchableOpacity>
@@ -146,28 +137,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contactItem: {
+    flexDirection: 'row',
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   profileImage: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 50,
+    marginRight: 15,
   },
-  placeholder: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
+  contactDetails: {
+    flex: 1,
   },
   contactName: {
     fontSize: 18,
+    fontWeight: 'bold',
   },
   addButton: {
     backgroundColor: '#007BFF',

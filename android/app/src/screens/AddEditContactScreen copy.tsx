@@ -4,15 +4,17 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
+// Importar la imagen predeterminada localmente
+const defaultImage = require('../assets/images/default-profile.png');
+
 type Props = NativeStackScreenProps<RootStackParamList, 'AddEditContact'>;
 
 const AddEditContactScreen = ({ route, navigation }: Props) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
+  const [profileImage, setProfileImage] = useState<any>(defaultImage);  // Imagen predeterminada inicialmente
 
-  // Si se está editando un contacto, cargamos la información existente
   useEffect(() => {
     if (route.params?.contactId && route.params?.contact) {
       const contact = route.params.contact;
@@ -20,20 +22,19 @@ const AddEditContactScreen = ({ route, navigation }: Props) => {
         setName(contact.name || '');
         setPhone(contact.phone || '');
         setEmail(contact.email || '');
-        setProfileImage(contact.profileImage || undefined);
+        setProfileImage(contact.profileImage ? { uri: contact.profileImage } : defaultImage);  // Usa la imagen si existe o la predeterminada
       }
     }
   }, [route.params?.contactId, route.params?.contact]);
 
   // Función para tomar una foto con la cámara
-  const takePhoto = async () => {
-    const response = await launchCamera({ mediaType: 'photo', saveToPhotos: true });
-    if (response.assets && response.assets.length > 0) {
-      const uri = response.assets[0].uri;
-      setProfileImage(uri);
-    }
-    
-    
+  const takePhoto = () => {
+    launchCamera({ mediaType: 'photo' }, (response) => {
+      if (response.assets && response.assets.length > 0) {
+        const uri = response.assets[0].uri;
+        if (uri) setProfileImage({ uri });  // Asegúrate de que el valor `uri` es una cadena válida
+      }
+    });
   };
 
   // Función para seleccionar una imagen de la galería
@@ -41,7 +42,7 @@ const AddEditContactScreen = ({ route, navigation }: Props) => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.assets && response.assets.length > 0) {
         const uri = response.assets[0].uri;
-        setProfileImage(uri);
+        if (uri) setProfileImage({ uri });  // Asegúrate de que el valor `uri` es una cadena válida
       }
     });
   };
@@ -52,7 +53,7 @@ const AddEditContactScreen = ({ route, navigation }: Props) => {
       name,
       phone,
       email,
-      profileImage,
+      profileImage: profileImage.uri || null,  // Guardar solo la `uri` de la imagen o dejar `null`
     };
 
     navigation.navigate('ContactList', { newContact: contact });
@@ -61,15 +62,10 @@ const AddEditContactScreen = ({ route, navigation }: Props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={pickImageFromGallery}>
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.profileImage} />
-        ) : (
-          <View style={styles.placeholder}>
-            <Text>{name ? name[0] : "?"}</Text>
-          </View>
-        )}
+        <Image source={profileImage} style={styles.profileImage} />
       </TouchableOpacity>
-      <Button title="Take Photo /" onPress={takePhoto} />
+
+      <Button title="Take Photo" onPress={takePhoto} />  {/* Botón para tomar foto */}
 
       <TextInput
         style={styles.input}
@@ -109,15 +105,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 20,
-  },
-  placeholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: 20,
   },
 });
