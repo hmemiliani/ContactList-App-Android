@@ -8,6 +8,7 @@ export const useProfileImage = () => {
     const response = await launchCamera({ mediaType: 'photo', saveToPhotos: true });
     if (response.assets && response.assets.length > 0) {
       const uri = response.assets[0].uri;
+      console.log('Image URI from camera:', uri);
       setProfileImage(uri);
     }
   };
@@ -16,6 +17,7 @@ export const useProfileImage = () => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.assets && response.assets.length > 0) {
         const uri = response.assets[0].uri;
+        console.log('Image URI from gallery:', uri);
         setProfileImage(uri);
       }
     });

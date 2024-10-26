@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   placeholderText: {
-    fontSize: 18,
+    fontSize: 30,
     fontWeight: 'bold',
   },
   contactName: {

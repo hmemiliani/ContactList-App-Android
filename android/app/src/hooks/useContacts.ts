@@ -6,8 +6,8 @@ const STORAGE_KEY = '@contacts';
 
 export const useContacts = (route?: any) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
-
-  // Cargar los contactos desde AsyncStorage
+// Cargar los contactos desde AsyncStorage
+  
   const loadContacts = async () => {
     try {
       const storedContacts = await AsyncStorage.getItem(STORAGE_KEY);
@@ -36,11 +36,11 @@ export const useContacts = (route?: any) => {
         ? prevContacts.map((c) => (c.id === contact.id ? contact : c))
         : [...prevContacts, contact];
       saveContacts(updatedContacts);
+      loadContacts();
       return updatedContacts;
     });
   };
 
-  // Eliminar contacto
   const deleteContact = (contactId: string) => {
     setContacts((prevContacts) => {
       const updatedContacts = prevContacts.filter((contact) => contact.id !== contactId);
@@ -49,14 +49,12 @@ export const useContacts = (route?: any) => {
     });
   };
 
-  // Manejo de eliminación automática basado en la navegación
   useEffect(() => {
     if (route?.params?.contactIdToDelete) {
       deleteContact(route.params.contactIdToDelete);
     }
   }, [route?.params?.contactIdToDelete]);
 
-  // Cargar contactos al montar el componente
   useEffect(() => {
     loadContacts();
   }, []);

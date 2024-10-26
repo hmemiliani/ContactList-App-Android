@@ -25,7 +25,7 @@ const AddEditContactScreen = ({ route, navigation }: Props) => {
     }
   }, [route.params]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const contact = {
       id: route.params?.contactId || Date.now().toString(),
       name,
@@ -33,7 +33,7 @@ const AddEditContactScreen = ({ route, navigation }: Props) => {
       email,
       profileImage,
     };
-    addOrUpdateContact(contact);
+    await addOrUpdateContact(contact);
     navigation.navigate('ContactList', { newContact: contact });
 
   };
@@ -46,7 +46,7 @@ const AddEditContactScreen = ({ route, navigation }: Props) => {
             <Image source={{ uri: profileImage }} style={styles.profileImage} />
           ) : (
             <View style={styles.placeholder}>
-              <Text>{name ? name[0] : " "}</Text>
+              <Text style={styles.currentAvatar}>{name ? name[0] : " "}</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   container: { padding: 20, display: 'flex' },
   imgContainer: { alignItems: 'center', marginBottom: 20 },
   profileImage: { width: 100, height: 100, borderRadius: 50, marginBottom: 20 },
+  currentAvatar: { fontSize: 50 },
   placeholder: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center', marginBottom: 20 },
   input: { height: 40, borderColor: 'gray', borderWidth: 1, margin: 10, padding: 10 },
 });
