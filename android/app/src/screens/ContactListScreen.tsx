@@ -13,7 +13,7 @@ const ContactListScreen = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      loadContacts();  // Cargar los contactos cada vez que la pantalla recibe foco
+      loadContacts();
     }, [])
   );
   
@@ -30,10 +30,15 @@ const ContactListScreen = () => {
             <Text style={styles.placeholderText}>{item.name ? item.name[0] : "?"}</Text>
           </View>
         )}
-        <View style={styles.contactContainer}>
-          <Text style={styles.contactName}>{item.name}</Text>
-          <Text>{item.phone}</Text>
-          <Text>{item.email}</Text>
+        <View style={styles.InfoContainer}>
+          <View style={styles.contactContainer}>
+            <Text style={styles.contactName}>{item.name}</Text>
+            <Text style={styles.contactInfo}>{item.phone}</Text>
+            <Text style={styles.contactInfo}>{item.email}</Text>
+          </View>
+          <View>
+            <Text style={styles.contactTag}>Employee</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -66,20 +71,31 @@ const styles = StyleSheet.create({
   infoContactContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   contactContainer: {
     flexDirection: 'column',
-    marginLeft: 20,
+    marginLeft: 10,
+    color: '#000',
   },
   profileImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 70,
+    height: 70,
+    borderRadius: 40,
+    marginLeft: 15,
+  },
+  InfoContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '70%',
+    alignItems: 'center',
   },
   placeholder: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     borderRadius: 25,
+    marginLeft: 15,
     backgroundColor: '#ccc',
     justifyContent: 'center',
     alignItems: 'center',
@@ -87,9 +103,20 @@ const styles = StyleSheet.create({
   placeholderText: {
     fontSize: 30,
     fontWeight: 'bold',
+    color: '#000',
   },
   contactName: {
     fontSize: 18,
+    color: '#000',
+  },
+  contactInfo: {
+    color: '#000',
+  },
+  contactTag: {
+    backgroundColor: '#c7c7c7',
+    color: '#fff',
+    padding: 5,
+    borderRadius: 5,
   },
   addButton: {
     backgroundColor: '#007BFF',

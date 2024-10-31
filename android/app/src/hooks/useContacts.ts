@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Contact } from '../types/navigation';  // Importamos el tipo Contact
+import { Contact } from '../types/navigation';
 
 const STORAGE_KEY = '@contacts';
 
 export const useContacts = (route?: any) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
-// Cargar los contactos desde AsyncStorage
   
   const loadContacts = async () => {
     try {
@@ -19,7 +18,6 @@ export const useContacts = (route?: any) => {
     }
   };
 
-  // Guardar los contactos en AsyncStorage
   const saveContacts = async (newContacts: Contact[]) => {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newContacts));
@@ -28,7 +26,6 @@ export const useContacts = (route?: any) => {
     }
   };
 
-  // Agregar o actualizar un contacto
   const addOrUpdateContact = (contact: Contact) => {
     setContacts((prevContacts) => {
       const contactExists = prevContacts.some((c) => c.id === contact.id);

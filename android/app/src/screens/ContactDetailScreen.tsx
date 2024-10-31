@@ -87,15 +87,18 @@ const styles = StyleSheet.create({
     fontSize: 80,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#000',
   },
   contactName: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10
+    marginBottom: 10,
+    color: '#000',
   },
   contactInfo: {
     fontSize: 18,
-    marginBottom: 10
+    marginBottom: 10,
+    color: '#000',
   },
   actionsContainer: {
     flexDirection: 'row',
